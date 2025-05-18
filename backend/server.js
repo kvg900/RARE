@@ -17,7 +17,7 @@ app.use(express.json()); //after using this whateverver request we will get it w
 app.use(cors()); //using this we can access backend from any ip
 
 // api in points
-app.use("/api/user", userRouter);
+app.use("/api/users", userRouter);
 app.use("/api/product", productRouter);
 app.get("/", (req, res) => {
   res.send("API Working");

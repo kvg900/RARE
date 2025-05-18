@@ -69,14 +69,56 @@ const registerUser = async (req, res) => {
 
 //route for admin login
 
+// const adminLogin = async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+//     if (
+//       email === process.env.ADMIN_EMAIL &&
+//       password === process.env.ADMIN_PASSWORD
+//     ) {
+//       const token = jwt.sign(email + password, process.env.JWT_SECRET);
+//       res.json({ success: true, token });
+//     } else {
+//       res.json({ success: false, message: "INVALID CREDENTIALS" });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     res.json({ success: false, message: error.message });
+//   }
+// };
+// ...existing code...
+
+//route for admin login
+
 const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    // Validate input
+    if (!email || !password) {
+      return res.json({
+        success: false,
+        message: "Email and password are required",
+      });
+    }
+
+    // Normalize and trim email for comparison
+    const adminEmail = process.env.ADMIN_EMAIL
+      ? process.env.ADMIN_EMAIL.trim().toLowerCase()
+      : "";
+    const adminPassword = process.env.ADMIN_PASSWORD
+      ? process.env.ADMIN_PASSWORD
+      : "";
+
     if (
-      email === process.env.ADMIN_EMAIL &&
-      password === process.env.ADMIN_PASSWORD
+      email.trim().toLowerCase() === adminEmail &&
+      password === adminPassword
     ) {
-      const token = jwt.sign(email + password, process.env.JWT_SECRET);
+      // Use a proper JWT payload
+      const token = jwt.sign(
+        { email: adminEmail, role: "admin" },
+        process.env.JWT_SECRET
+      );
       res.json({ success: true, token });
     } else {
       res.json({ success: false, message: "INVALID CREDENTIALS" });
@@ -87,4 +129,5 @@ const adminLogin = async (req, res) => {
   }
 };
 
+// ...existing code...
 export { loginUser, registerUser, adminLogin };
