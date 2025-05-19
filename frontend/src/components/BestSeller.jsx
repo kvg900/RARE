@@ -5,9 +5,14 @@ import ProductItem from "./ProductItem";
 
 const BestSeller = () => {
   const { products } = useContext(ShopContext);
+  // console.log("Products from context:", products);
   const [bestSeller, setBestSeller] = useState([]);
   useEffect(() => {
-    const bestProduct = products.filter((item) => item.bestseller);
+    // console.log("Running bestseller filter");
+    const bestProduct = products.filter((item) => {
+      // console.log(item.name, "->", item.bestSeller); // <--- see which are true
+      return item.bestSeller === true;
+    });
     setBestSeller(bestProduct.slice(0, 5));
   }, [products]);
 
@@ -23,15 +28,19 @@ const BestSeller = () => {
         </p>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6">
-        {bestSeller.map((item, index) => (
-          <ProductItem
-            key={index}
-            id={item._id}
-            name={item.name}
-            image={item.image}
-            price={item.price}
-          />
-        ))}
+        {bestSeller.length === 0 ? (
+          <p className="text-center col-span-full">No bestsellers found.</p>
+        ) : (
+          bestSeller.map((item, index) => (
+            <ProductItem
+              key={index}
+              id={item._id}
+              name={item.name}
+              image={item.image}
+              price={item.price}
+            />
+          ))
+        )}
       </div>
     </div>
   );
